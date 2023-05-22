@@ -2,7 +2,7 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 public class FileTemp <E> {
-    private RandomAccessFile randomAccessFile;
+    protected RandomAccessFile randomAccessFile;
     private String fileName;
     private File file;
     private final int RECORD_SIZE;
@@ -18,12 +18,16 @@ public class FileTemp <E> {
     public void closeFile() throws IOException {
         randomAccessFile.close();
     }
-    public String getRecord(E object){
+    public String giveRecord(E object){
         return object.toString();
+    }
+    public String getSinglePartOfRecord(int position) throws IOException {
+        randomAccessFile.seek(position);
+        return read();
     }
     public void write(E object) throws IOException {
         randomAccessFile.seek(randomAccessFile.length());
-        randomAccessFile.writeChars(getRecord(object));
+        randomAccessFile.writeChars(giveRecord(object));
     }
     public String read() throws IOException {
         for (int i = 0; i < STRING_SIZE; i++)
