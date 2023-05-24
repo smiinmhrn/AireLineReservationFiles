@@ -2,8 +2,9 @@ import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 public class Flights extends FileTemp{
-    public Flights(RandomAccessFile randomAccessFile, String fileName, File file, int RECORD_SIZE, int STRING_SIZE) {
-        super(randomAccessFile, fileName, file, RECORD_SIZE, STRING_SIZE);
+    private final int RECORD_SIZE = 210;
+    public Flights(RandomAccessFile randomAccessFile, String fileName) {
+        super(randomAccessFile, fileName);
     }
     public void printSingleAirline() throws IOException {
         System.out.printf("| %-12s | %-12s | %-12s | %-12s | %-12s | %-12s | %-12s ",
