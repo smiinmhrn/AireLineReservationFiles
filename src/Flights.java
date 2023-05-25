@@ -12,8 +12,14 @@ public class Flights extends FileTemp{
         System.out.print("\n");
     }
     public void printAllAirline() throws IOException {
-        for (int i = 0; i < randomAccessFile.length(); i++)
+        randomAccessFile.seek(0);
+        long length = randomAccessFile.length();
+        while (length != 0){
             printSingleAirline();
+            length = length - 420;
+        }
+//        for (int i = 0; i < randomAccessFile.length(); i++)
+//            printSingleAirline();
     }
     public boolean availableSeat(int position) throws IOException {
         return getSinglePartOfRecord(position).equals("0");

@@ -1,6 +1,7 @@
 import appearance.Appearance;
 
 import java.io.IOException;
+import java.io.RandomAccessFile;
 import java.util.Scanner;
 // this class has responsible for showing register menu => sign in and sign up
 public class RegisterMenu {
@@ -43,6 +44,10 @@ public class RegisterMenu {
             if (password.equals("samin228")){
 //                var admin = new Admin(new Templates(), new AdminActions(NEWING_CLASSES.getFLIGHT()), NEWING_CLASSES);
 //                admin.adminMenu();
+                users.randomAccessFile.close();
+                var admin = new Admin(new Templates()
+                        ,new Flights(new RandomAccessFile("flights.dat", "rw"),"flights.dat"));
+                admin.adminMenu();
                 break;
             } else {
                 System.out.println(Appearance.RED + "Wrong password! Try again :"+ Appearance.RESET_COLOR);
@@ -78,6 +83,13 @@ public class RegisterMenu {
 //                        ,NEWING_CLASSES);
 //
 //                passenger.passengerMenu();
+                var passenger = new Passenger(username,
+                        new Templates(),
+                        new Users(new RandomAccessFile("user.dat", "rw"), "user.dat"),
+                        new Flights(new RandomAccessFile("flights.dat", "rw"), "flights.dat"),
+                        new Tickets(new RandomAccessFile("tickets.dat", "rw"),"tickets.dat"));
+
+                passenger.passengerMenu();
                 break;
             }
             else {
@@ -106,10 +118,13 @@ public class RegisterMenu {
         String password = input.next();
 
         users.write(new User(username, password,"0"));
-//        NEWING_CLASSES.getRegister().addPassengerAccount(new Users(username, password,"0"));
 
-//        var passenger = new Passenger(username, new Templates(), new PassengerActions(
-//                NEWING_CLASSES.getFLIGHT(), NEWING_CLASSES.getUSER(), NEWING_CLASSES.getTICKET()), NEWING_CLASSES);
-//        passenger.passengerMenu();
+        var passenger = new Passenger(username,
+                new Templates(),
+                new Users(new RandomAccessFile("user.dat", "rw"), "user.dat"),
+                new Flights(new RandomAccessFile("flights.dat", "rw"), "flights.dat"),
+                new Tickets(new RandomAccessFile("tickets.dat", "rw"),"tickets.dat"));
+
+        passenger.passengerMenu();
     }
 }

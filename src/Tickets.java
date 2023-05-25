@@ -5,10 +5,12 @@ public class Tickets extends FileTemp{
         super(randomAccessFile, fileName);
     }
     public String creatTicketId(String username, String flightId) throws IOException {
+
         String ticketId = username + flightId;
+        if (randomAccessFile.length() == 0 ) return ticketId;
 
         while (true){
-            if (search(60, ticketId, 90) != -1) ticketId = ticketId + "#";
+            if (search(120, ticketId, 180) != -1) ticketId = ticketId + "#";
             else break;
         } return ticketId;
     }
@@ -20,6 +22,7 @@ public class Tickets extends FileTemp{
         }
     }
     public boolean haveEverBooked(String username) throws IOException {
-        return search(0, username, 90) != -1;
+        return search(0, username, 180) != -1;
     }
+
 }

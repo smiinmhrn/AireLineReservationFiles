@@ -20,10 +20,9 @@ public class Flight implements CanCustomize{
     }
     @Override
     public String customize(String str) {
-        while (STRING_BUILDER.length() < 30)
-            STRING_BUILDER.append(" ");
-        str = STRING_BUILDER.toString();
-        return str.substring(0, 30);
+        while (str.length() < 30)
+            str += " ";
+        return str.substring(0,30);
     }
     @Override
     public String toString() {

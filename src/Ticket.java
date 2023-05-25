@@ -9,11 +9,10 @@ public class Ticket implements CanCustomize{
         this.TICKET_ID = ticketId; // 60-90
     }
     @Override
-    public String customize(String str) {
-        while (STRING_BUILDER.length() < 30)
-            STRING_BUILDER.append(" ");
-        str = STRING_BUILDER.toString();
-        return str.substring(0, 30);
+    public String customize(String str){
+        while (str.length() < 30)
+            str += " ";
+        return str.substring(0,30);
     }
     @Override
     public String toString() {

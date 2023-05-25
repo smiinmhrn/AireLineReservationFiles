@@ -9,8 +9,15 @@ public class FileTemp <E> {
     public FileTemp(RandomAccessFile randomAccessFile, String fileName) {
         this.randomAccessFile = randomAccessFile;
     }
-    public RandomAccessFile open(String fileName) throws FileNotFoundException {
-        return this.randomAccessFile =  new RandomAccessFile(fileName, "rw");
+    public void open(String fileName) throws FileNotFoundException {
+        this.randomAccessFile =  new RandomAccessFile(fileName, "rw");
+    }
+    public void ifClose(String filename) throws FileNotFoundException {
+        try {
+            read();
+        } catch (IOException e) {
+            open(filename);
+        }
     }
     public void closeFile() throws IOException {
         randomAccessFile.close();
@@ -31,6 +38,7 @@ public class FileTemp <E> {
         for (int i = 0; i < 30; i++) {
             str += randomAccessFile.readChar();
         }
+//        System.out.println(str.trim());
         return str.trim();
     }
     public int search(int position, String shouldSearch, int recordSize) throws IOException {
@@ -47,26 +55,25 @@ public class FileTemp <E> {
             }
         } return -1;
     }
-    public String fixStringToWrite(String str) {
-        while (STRING_BUILDER.length() < STRING_SIZE)
-            STRING_BUILDER.append(" ");
-        str = STRING_BUILDER.toString();
-        return str.substring(0, STRING_SIZE);
+    public String fixStringToWrite(String str){
+        while (str.length() < 30)
+            str += " ";
+        return str.substring(0,30);
     }
     public void update(int position, String shouldUpdate) throws IOException {
         randomAccessFile.seek(position);
         randomAccessFile.writeChars(fixStringToWrite(shouldUpdate));
     }
     public void remove(int position, int recordSize, String fileName) throws IOException {
-
+        System.out.println(position);
         File tempFile = new File("temp.dat");
-        RandomAccessFile temp = new RandomAccessFile(tempFile, "w");
+        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
         randomAccessFile.seek(0);
         while (randomAccessFile.getFilePointer() != randomAccessFile.length()) {
 
-            if (randomAccessFile.getFilePointer() != position){
+            if (randomAccessFile.getFilePointer() != (position - 60)){
                 for (int i = 0; i < recordSize; i = i + STRING_SIZE)
-                    temp.writeChars(read());
+                    temp.writeChars(fixStringToWrite(read()));
             }else {
                 long seek = randomAccessFile.getFilePointer() + recordSize;
                 if (seek < randomAccessFile.length())
