@@ -2,12 +2,12 @@ public class Ticket implements CanCustomize{
     private final String USERNAME;
     private final String FLIGHT_ID;
     private final String TICKET_ID;
-    private final StringBuilder STRING_BUILDER = new StringBuilder();
     public Ticket(String username, String flightId, String ticketId) {
-        this.USERNAME = username; //0-29
-        this.FLIGHT_ID = flightId; // 30-60
-        this.TICKET_ID = ticketId; // 60-90
+        this.USERNAME = username;
+        this.FLIGHT_ID = flightId;
+        this.TICKET_ID = ticketId;
     }
+    // for customizing string for writing in file
     @Override
     public String customize(String str){
         while (str.length() < 30)

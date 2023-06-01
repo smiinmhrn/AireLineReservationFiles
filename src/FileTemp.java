@@ -5,8 +5,7 @@ import java.io.RandomAccessFile;
 public class FileTemp <E> {
     protected RandomAccessFile randomAccessFile;
     private final int STRING_SIZE = 60;
-    private final StringBuilder STRING_BUILDER = new StringBuilder();
-    public FileTemp(RandomAccessFile randomAccessFile, String fileName) {
+    public FileTemp(RandomAccessFile randomAccessFile) {
         this.randomAccessFile = randomAccessFile;
     }
     public void open(String fileName) throws FileNotFoundException {
@@ -22,7 +21,7 @@ public class FileTemp <E> {
     public void closeFile() throws IOException {
         randomAccessFile.close();
     }
-    public String giveRecord(E object){
+    private String giveRecord(E object){
         return object.toString();
     }
     public String getSinglePartOfRecord(int position) throws IOException {
@@ -38,7 +37,6 @@ public class FileTemp <E> {
         for (int i = 0; i < 30; i++) {
             str += randomAccessFile.readChar();
         }
-//        System.out.println(str.trim());
         return str.trim();
     }
     public int search(int position, String shouldSearch, int recordSize) throws IOException {
@@ -65,9 +63,9 @@ public class FileTemp <E> {
         randomAccessFile.writeChars(fixStringToWrite(shouldUpdate));
     }
     public void remove(int position, int recordSize, String fileName) throws IOException {
-        System.out.println(position);
-        File tempFile = new File("temp.dat");
-        RandomAccessFile temp = new RandomAccessFile(tempFile, "rw");
+
+        RandomAccessFile temp = new RandomAccessFile("temp.dat", "rw");
+
         randomAccessFile.seek(0);
         while (randomAccessFile.getFilePointer() != randomAccessFile.length()) {
 
@@ -81,7 +79,14 @@ public class FileTemp <E> {
             }
         }
         randomAccessFile.close();
-        new File(fileName).delete();
-        tempFile.renameTo(new File(fileName));
+//        temp.close();
+
+        File file = new File(fileName);
+        File tempFile = new File("temp.dat");
+
+        System.out.println("file delete " + file.delete());
+//        new File(fileName).delete();
+        System.out.println("file rename " + tempFile.renameTo(new File(fileName)));
+//        tempFile.renameTo(new File(fileName));
     }
 }

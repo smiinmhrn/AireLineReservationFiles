@@ -6,10 +6,12 @@ import java.util.Scanner;
 public class Admin {
     Scanner input = new Scanner(System.in);
     private final Templates TEMPLATE;
-    private Flights flights;
-    public Admin(Templates TEMPLATE, Flights flights) {
+    private final Flights FLIGHTS;
+    private final Tickets TICKETS;
+    public Admin(Templates TEMPLATE, Flights flights, Tickets tickets) {
         this.TEMPLATE = TEMPLATE;
-        this.flights = flights;
+        this.FLIGHTS = flights;
+        this.TICKETS = tickets;
     }
     // this function is for showing admin menu
     public void adminMenu() throws IOException {
@@ -39,8 +41,9 @@ public class Admin {
                     showingFlightSchedules();
                     break label;
                 case "0" :
-                    flights.randomAccessFile.close();
-                    flights.ifClose("user.dat");
+                    FLIGHTS.closeFile();
+                    TICKETS.closeFile();
+
                     var mainMenu = new MainMenu(new Templates());
                     mainMenu.mainMenu();
                     break label;
@@ -52,13 +55,14 @@ public class Admin {
     }
     // this function is for adding new airline
     private void add() throws IOException {
+        FLIGHTS.ifClose("flights.dat");
 
         System.out.println(Appearance.BLUE + "[ ADDING PANEL ]" + Appearance.RESET_COLOR);
         System.out.println(Appearance.TEXT_ITALIC + "Enter Flight id :");
         String flightId = input.next().toUpperCase();
 
         while (true) {
-            if (flights.search(0,flightId,420) != -1) {
+            if (FLIGHTS.search(0,flightId,420) != -1) {
                 System.out.println(Appearance.RED +
                         "This flight id is existed! Try again with another flight id :" + Appearance.RESET_COLOR);
                 flightId = input.next().toUpperCase();
@@ -92,7 +96,7 @@ public class Admin {
         System.out.println("Enter Seats :" + Appearance.RESET_STYLE);
         String seats = TEMPLATE.availableInput(input.next());
 
-        flights.write(new Flight(flightId, origin, destination, date, time, price, seats));
+        FLIGHTS.write(new Flight(flightId, origin, destination, date, time, price, seats));
         System.out.println(Appearance.GREEN + "Adding new airline successfully !" + Appearance.RESET_COLOR);
 
         if (TEMPLATE.backToMenu("Admin", "Adding").equals("1")) adminMenu();
@@ -100,26 +104,26 @@ public class Admin {
     }
     // this function is for removing single airline
     private void remove() throws IOException {
+        FLIGHTS.ifClose("flights.dat");
+        TICKETS.ifClose("tickets.dat");
 
         System.out.println(Appearance.BLUE + "[ REMOVE PANEL ]" + Appearance.RESET_COLOR);
-        flights.printAllAirline();
+        FLIGHTS.printAllAirline();
 
         System.out.println(Appearance.TEXT_ITALIC +
                 "Type the Flight Id that you want to remove :" + Appearance.RESET_STYLE);
         String flightId = existsFlightId(input.next().toUpperCase());
 
-//        int process = 1;
-//        if (NEWING_CLASSES.getTICKET().searchFlightId(flightId)) {
-//            System.out.println(Appearance.GREEN +
-//                    "This airline have been booked and you can not remove it !" + Appearance.RESET_COLOR);
-//            process = 0;
-//        }
-//        if (process != 0) {
-//            ADMIN_ACTIONS.removeAirline(ADMIN_ACTIONS.searchByFlightId(flightId));
-//            System.out.println(Appearance.GREEN + "Removing airline successfully !" + Appearance.RESET_COLOR);
-//        }
-        flights.remove(flights.search(0,flightId,420),420,"flights.dat");
-        System.out.println(Appearance.GREEN + "Removing airline successfully !" + Appearance.RESET_COLOR);
+        int process = 1;
+        if (TICKETS.search(60, flightId, 180) != -1){
+            System.out.println(Appearance.GREEN +
+                    "This airline have been booked and you can not remove it !" + Appearance.RESET_COLOR);
+            process = 0;
+        }
+        if (process != 0){
+            FLIGHTS.remove(FLIGHTS.search(0,flightId,420),420,"flights.dat");
+            System.out.println(Appearance.GREEN + "Removing airline successfully !" + Appearance.RESET_COLOR);
+        }
 
         if (TEMPLATE.backToMenu("Admin", "Removing").equals("1")) adminMenu();
         else remove();
@@ -129,36 +133,41 @@ public class Admin {
      * @return => and return an available id
      */
     private String existsFlightId(String id) throws IOException {
+        FLIGHTS.ifClose("flights.dat");
         while (true) {
-            if (flights.search(0,id,420) == -1) {
+            if (FLIGHTS.search(0,id,420) == -1) {
                 System.out.println(Appearance.RED +
                         "This Flight id dos not exist! Try again :" + Appearance.RESET_COLOR);
-                id = input.next();
+                id = input.next().toUpperCase();
             } else break;
         } return id;
     }
     // this function and next function are for updating an airline
     private void update() throws IOException {
+        FLIGHTS.ifClose("flights.dat");
+        TICKETS.ifClose("tickets.dat");
 
         System.out.println(Appearance.BLUE + "[ UPDATING PANEL ]" + Appearance.RESET_COLOR);
-        flights.printAllAirline();
+        FLIGHTS.printAllAirline();
 
         System.out.println(Appearance.TEXT_ITALIC + "Type the Flight id you want to update :" + Appearance.RESET_STYLE);
 
         String flight = existsFlightId(input.next().toUpperCase());
 
-//        int process = 1;
-//        if (NEWING_CLASSES.getTICKET().searchFlightId(flight)){
-//            System.out.println(Appearance.GREEN +
-//                    "This airline have been booked and you can not update it !" + Appearance.RESET_COLOR);
-//            process = 0;
-//        }
-//        if (process != 0) updateInProgress(ADMIN_ACTIONS.searchByFlightId(flight));
-        updateInProgress((flights.search(0,flight,420) - 60));
+        int process = 1;
+        if (TICKETS.search(60, flight, 180) != -1){
+            System.out.println(Appearance.GREEN +
+                    "This airline have been booked and you can not update it !" + Appearance.RESET_COLOR);
+            process = 0;
+        }
+        if (process != 0){
+            updateInProgress((FLIGHTS.search(0,flight,420) - 60));
+            System.out.println(Appearance.GREEN + "updating airline successfully !" + Appearance.RESET_COLOR);
+        }
 
         if (TEMPLATE.backToMenu("Admin", "Updating").equals("1")) adminMenu();
         else {
-            flights.randomAccessFile.seek(0);
+            FLIGHTS.randomAccessFile.seek(0);
             update();
         }
     }
@@ -168,10 +177,10 @@ public class Admin {
      *               and update that special airline
      */
     private void updateInProgress(int result) throws IOException {
+        FLIGHTS.ifClose("flights.dat");
 
-        System.out.println(result);
-        flights.randomAccessFile.seek(result);
-        flights.printSingleAirline();
+        FLIGHTS.randomAccessFile.seek(result);
+        FLIGHTS.printSingleAirline();
 
         System.out.println(Appearance.TEXT_ITALIC + """
             Which statement you want to change :
@@ -187,45 +196,45 @@ public class Admin {
                     String id = input.next().toUpperCase();
 
                     while (true) {
-                        if (flights.search(0,id,420) != -1) {
+                        if (FLIGHTS.search(0,id,420) != -1) {
                             System.out.println(Appearance.RED +
                                     "This Flight id dos exist! Try again :" + Appearance.RESET_COLOR);
                             id = input.next().toUpperCase();
                         } else break;
                     }
-                    flights.update(result,id);
+                    FLIGHTS.update(result,id);
                     break label;
 
                 case "2" :
                     System.out.println("Enter your new Origin :");
                     String origin = TEMPLATE.templateStringStyle(input.next());
-                    flights.update((result + 60),origin);
+                    FLIGHTS.update((result + 60),origin);
 
                     break label;
 
                 case "3" :
                     System.out.println("Enter your new Destination :");
                     String destination = TEMPLATE.templateStringStyle(input.next());
-                    flights.update((result + 120),destination);
+                    FLIGHTS.update((result + 120),destination);
 
                     break label;
 
                 case "4" :
-                    flights.update((result + 180),TEMPLATE.dateTemplate());
+                    FLIGHTS.update((result + 180),TEMPLATE.dateTemplate());
                     break label;
 
                 case "5" :
-                    flights.update((result + 240),TEMPLATE.timeTemplate());
+                    FLIGHTS.update((result + 240),TEMPLATE.timeTemplate());
                     break label;
 
                 case "6" :
                     System.out.println("Enter your new Price :");
-                    flights.update((result + 300),TEMPLATE.availableInput(input.next()));
+                    FLIGHTS.update((result + 300),TEMPLATE.availableInput(input.next()));
                     break label;
 
                 case "7" :
                     System.out.println("Enter your new Seats :");
-                    flights.update((result + 360),TEMPLATE.availableInput(input.next()));
+                    FLIGHTS.update((result + 360),TEMPLATE.availableInput(input.next()));
                     break label;
 
                 default :
@@ -233,6 +242,7 @@ public class Admin {
                     choice = input.next();
             }
         }
+
         System.out.println(Appearance.GREEN + "Updating airline successfully !" + Appearance.RESET_COLOR);
         System.out.println("""
             1. Keep updating this airline
@@ -256,13 +266,14 @@ public class Admin {
     }
     // this function is for showing all airlines
     private void showingFlightSchedules() throws IOException {
-        flights.ifClose("flights.dat");
+        FLIGHTS.ifClose("flights.dat");
+
         System.out.println(Appearance.BLUE + " [ AIRLINE SCHEDULES ] " + Appearance.RESET_COLOR);
-        flights.printAllAirline();
+        FLIGHTS.printAllAirline();
 
         if (TEMPLATE.backToMenu("Admin", "Showing airline list").equals("1")) adminMenu();
         else {
-            flights.randomAccessFile.seek(0);
+            FLIGHTS.randomAccessFile.seek(0);
             showingFlightSchedules();
         }
     }

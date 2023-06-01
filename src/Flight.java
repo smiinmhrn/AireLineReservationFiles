@@ -7,7 +7,6 @@ public class Flight implements CanCustomize{
     private String time;
     private String price;
     private String seats;
-    private final StringBuilder STRING_BUILDER = new StringBuilder();
     public Flight(String flightId, String origin, String destination,
                    String date, String time, String price, String seats) {
         this.flightId = flightId;
@@ -18,6 +17,7 @@ public class Flight implements CanCustomize{
         this.price = price;
         this.seats = seats;
     }
+    // for customizing string for writing in file
     @Override
     public String customize(String str) {
         while (str.length() < 30)

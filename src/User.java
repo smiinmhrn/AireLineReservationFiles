@@ -1,12 +1,13 @@
 public class User implements CanCustomize{
-    private final String USERNAME; // 0-29
-    private String password; // 30-60
-    private String charge; // 60-90
+    private final String USERNAME;
+    private String password;
+    private String charge;
     public User(String USERNAME, String password, String charge) {
         this.USERNAME = USERNAME;
         this.password = password;
         this.charge = charge;
     }
+    // for customizing string for writing in file
     @Override
     public String customize(String str){
         while (str.length() < 30)

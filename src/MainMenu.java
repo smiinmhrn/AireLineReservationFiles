@@ -6,10 +6,8 @@ import appearance.Appearance;
 public class MainMenu {
     Scanner input = new Scanner(System.in);
     private final Templates TEMPLATE;
-//    private final NewingClasses NEWING_CLASSES;
     public MainMenu(Templates TEMPLATE) {
         this.TEMPLATE = TEMPLATE;
-//        this.NEWING_CLASSES = newClasses;
     }
     // this function use for showing main menu
     public void mainMenu() throws IOException {
@@ -28,7 +26,8 @@ public class MainMenu {
                     signInAs();
                     break label;
                 case "2" :
-                    var registerMenu = new RegisterMenu(new Users(new RandomAccessFile("user.dat", "rw"), "user.dat"));
+                    var registerMenu = new RegisterMenu
+                            (new Users(new RandomAccessFile("user.dat", "rw")));
                     registerMenu.passengerSignUp();
                     break label;
                 default:
@@ -47,7 +46,8 @@ public class MainMenu {
             Choose :\s""" );
 
         String choice = input.next();
-        var registerMenu = new RegisterMenu(new Users(new RandomAccessFile("user.dat", "rw"), "user.dat"));
+        var registerMenu = new RegisterMenu(
+                new Users(new RandomAccessFile("user.dat", "rw")));
         label :
         while (true) {
             switch (TEMPLATE.availableInput(choice)) {
