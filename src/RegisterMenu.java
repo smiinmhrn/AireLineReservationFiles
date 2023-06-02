@@ -15,7 +15,6 @@ public class RegisterMenu {
             users.write(new User("samin", "samin228", "0"));
         }
     }
-
     // this function use for showing admin sign in menu and register admin
     public void adminSighIn() throws IOException {
         adminRegister();

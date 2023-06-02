@@ -302,13 +302,11 @@ public class Passenger {
             }
 
             int position = tickets.search(120,ticketId,180);
-//            System.out.println(position);
             String flightId = tickets.getSinglePartOfRecord((position - 120));
-//            System.out.println(flightId);
 
             flights.ifClose("flights.dat");
             int flightPos = flights.search(0, flightId, 420);
-//            System.out.println(flightPos);
+
             flights.increaseSeats((flightPos + 300));
             String price = flights.getSinglePartOfRecord((flightPos + 200));
             System.out.println("price is : " + price);
