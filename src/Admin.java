@@ -121,7 +121,7 @@ public class Admin {
             process = 0;
         }
         if (process != 0){
-            FLIGHTS.remove(FLIGHTS.search(0,flightId,420),420,"flights.dat");
+            FLIGHTS.remove(FLIGHTS.search(0,flightId,420),420, 7);
             System.out.println(Appearance.GREEN + "Removing airline successfully !" + Appearance.RESET_COLOR);
         }
 

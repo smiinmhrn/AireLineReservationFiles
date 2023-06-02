@@ -1,15 +1,14 @@
-import java.io.File;
 import java.io.IOException;
 import java.io.RandomAccessFile;
 public class Flights extends FileTemp{
-    private final int RECORD_SIZE = 210;
     public Flights(RandomAccessFile randomAccessFile) {
         super(randomAccessFile);
     }
     // this function is for printing single airline in console
     public void printSingleAirline() throws IOException {
         System.out.printf("| %-12s | %-12s | %-12s | %-12s | %-12s | %-12s | %-12s ",
-                read(), read(), read(), read(), read(), read(), read());
+                read(), read(), read(),
+                read(), read(), read(), read());
         System.out.print("\n");
     }
     // this function is for printing all airlines in console

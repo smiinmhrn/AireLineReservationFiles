@@ -11,7 +11,7 @@ public class RegisterMenu {
         this.users = users;
     }
     private void adminRegister() throws IOException {
-        if (users.search(0,"samin",90) == -1){
+        if (users.search(0,"samin",180) == -1){
             users.write(new User("samin", "samin228", "0"));
         }
     }
@@ -26,7 +26,7 @@ public class RegisterMenu {
         String username = input.next();
 
         while (true) {
-            if (users.search(0, username,180) != -1) {
+            if ((users.search(0, username,180) != -1) && (username.equals("samin"))) {
                 break;
             } else {
                 System.out.println(Appearance.RED + "Wrong username! Try again :" + Appearance.RESET_COLOR);

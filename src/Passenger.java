@@ -302,17 +302,21 @@ public class Passenger {
             }
 
             int position = tickets.search(120,ticketId,180);
-            String flightId = tickets.getSinglePartOfRecord((position - 60));
+//            System.out.println(position);
+            String flightId = tickets.getSinglePartOfRecord((position - 120));
+//            System.out.println(flightId);
 
             flights.ifClose("flights.dat");
             int flightPos = flights.search(0, flightId, 420);
-            flights.increaseSeats((flightPos + 360));
-            String price = flights.getSinglePartOfRecord((flightPos + 300));
+//            System.out.println(flightPos);
+            flights.increaseSeats((flightPos + 300));
+            String price = flights.getSinglePartOfRecord((flightPos + 200));
+            System.out.println("price is : " + price);
 
             users.ifClose("user.dat");
             users.increaseCharge(USERNAME, price);
 
-            tickets.remove((position - 120), 180, "tickets.dat");
+            tickets.remove((position - 120), 180, 3);
 
             System.out.println(Appearance.GREEN + "Ticket cancel successfully !" + Appearance.RESET_COLOR);
         }
